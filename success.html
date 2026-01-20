@@ -1,8 +1,10 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8">
   <title>Payment Successful - MoneyTalks</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <style>
     * {
       margin: 0;
@@ -10,7 +12,6 @@
       box-sizing: border-box;
       font-family: system-ui, -apple-system, sans-serif;
     }
-    
     body {
       background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       min-height: 100vh;
@@ -18,27 +19,31 @@
       align-items: center;
       justify-content: center;
       padding: 20px;
+      overflow: hidden;
     }
-    
     .card {
       background: white;
       border-radius: 20px;
       padding: 40px;
       max-width: 500px;
       width: 100%;
-      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      box-shadow: 0 20px 60px rgba(0,0,0,0.2);
       text-align: center;
-      animation: fadeIn 0.5s ease;
+      animation: fadeInUp 0.8s ease;
+      position: relative;
+      z-index: 2;
     }
-    
+    @keyframes fadeInUp {
+      from {opacity: 0; transform: translateY(30px);}
+      to {opacity: 1; transform: translateY(0);}
+    }
     .logo-container {
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 10px;
-      margin-bottom: 30px;
+      margin-bottom: 25px;
     }
-    
     .logo {
       width: 50px;
       height: 50px;
@@ -51,35 +56,27 @@
       font-weight: 800;
       color: white;
     }
-    
     .brand-name {
       font-size: 32px;
       font-weight: 700;
       color: #333;
-      letter-spacing: 0.5px;
     }
-    
     h1 {
-      color: #333;
-      margin: 20px 0 10px;
       font-size: 28px;
       font-weight: 600;
+      color: #2e7d32;
+      margin: 15px 0;
+      animation: popScale 0.6s ease;
     }
-    
+    @keyframes popScale {
+      0% {transform: scale(0.8); opacity: 0;}
+      100% {transform: scale(1); opacity: 1;}
+    }
     p {
       color: #555;
       font-size: 16px;
-      line-height: 1.6;
-      margin-bottom: 15px;
+      margin-bottom: 10px;
     }
-    
-    .welcome-text {
-      color: #667eea;
-      font-weight: 600;
-      font-size: 18px;
-      margin-top: 20px;
-    }
-    
     button {
       background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       color: white;
@@ -90,48 +87,122 @@
       font-weight: 600;
       cursor: pointer;
       margin-top: 20px;
-      transition: transform 0.2s ease;
+      transition: 0.25s ease;
     }
-    
     button:hover {
       transform: translateY(-2px);
+      opacity: 0.9;
     }
-    
-    .redirect-text {
+    .countdown {
+      margin-top: 10px;
       color: #666;
       font-size: 14px;
-      margin-top: 15px;
     }
-    
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
+
+    /* Checkmark Animation */
+    .checkmark {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      display: block;
+      margin: 0 auto 15px auto;
+      background: #2ecc71;
+      position: relative;
+      animation: scaleUp 0.5s forwards ease-out;
+    }
+    @keyframes scaleUp {
+      0% {transform: scale(0); opacity: 0;}
+      100% {transform: scale(1); opacity: 1;}
+    }
+    .checkmark:after {
+      content: '';
+      position: absolute;
+      top: 22px;
+      left: 16px;
+      width: 25px;
+      height: 50px;
+      border: solid white;
+      border-width: 0 8px 8px 0;
+      transform: rotate(45deg);
+      animation: drawCheck 0.4s 0.4s forwards ease-out;
+      opacity: 0;
+    }
+    @keyframes drawCheck {
+      to {opacity: 1;}
+    }
+
+    /* Confetti */
+    .confetti {
+      position: fixed;
+      width: 8px;
+      height: 8px;
+      background: white;
+      top: -10px;
+      border-radius: 50%;
+      animation: fall 2s linear forwards;
+    }
+    @keyframes fall {
+      to {transform: translateY(110vh); opacity: 0;}
     }
   </style>
-  <script>
-  function startRedirect() {
-    setTimeout(() => {
-      window.location.href = "https://t.me/+Hy1jWBHA4bBkNWY1";
-    }, 5000);
-  }
-  </script>
 </head>
-<body onload="startRedirect()">
+<body onload="startSuccessFlow()">
+
   <div class="card">
     <div class="logo-container">
       <div class="logo">MT</div>
       <div class="brand-name">MoneyTalks</div>
     </div>
-    
+
+    <div class="checkmark"></div>
     <h1>Payment Successful!</h1>
     <p>Thank you for trusting us! Your payment has been successfully processed.</p>
-    <p class="welcome-text">Welcome to the MoneyTalks family — where smart earners thrive!</p>
-    
+
     <button onclick="window.location.href='https://t.me/+Hy1jWBHA4bBkNWY1'">
       OPEN TELEGRAM
     </button>
-    
-    <p class="redirect-text">Redirecting to Telegram in 5 seconds...</p>
+
+    <p class="countdown">Redirecting in <span id="timer">5</span> seconds...</p>
   </div>
+
+  <script>
+    function startSuccessFlow() {
+      startConfetti();
+      startTimer();
+    }
+
+    function startTimer() {
+      let timeLeft = 5;
+      const timerEl = document.getElementById("timer");
+      const interval = setInterval(() => {
+        timeLeft--;
+        timerEl.textContent = timeLeft;
+        if (timeLeft <= 0) {
+          clearInterval(interval);
+          window.location.href = "https://t.me/+Hy1jWBHA4bBkNWY1";
+        }
+      }, 1000);
+    }
+
+    function startConfetti() {
+      const duration = 2000;
+      const end = Date.now() + duration;
+      const colors = ["#ffffff", "#ffeb3b", "#00e676", "#2196f3", "#e040fb"];
+      
+      (function frame() {
+        for (let i = 0; i < 8; i++) {
+          const div = document.createElement("div");
+          div.className = "confetti";
+          div.style.left = (Math.random() * 100) + "vw";
+          div.style.background = colors[Math.floor(Math.random() * colors.length)];
+          div.style.animationDuration = (Math.random() * 1 + 1.5) + "s";
+          document.body.appendChild(div);
+          setTimeout(() => div.remove(), 2000);
+        }
+        if (Date.now() < end) requestAnimationFrame(frame);
+      })();
+    }
+  </script>
+
 </body>
 </html>
