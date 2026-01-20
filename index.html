@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MoneyTalks - Region Check</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: system-ui, -apple-system, sans-serif;
+    }
+    
+    body {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    
+    .card {
+      background: white;
+      border-radius: 20px;
+      padding: 40px;
+      max-width: 500px;
+      width: 100%;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      text-align: center;
+      animation: fadeIn 0.5s ease;
+    }
+    
+    .logo-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    
+    .logo {
+      width: 50px;
+      height: 50px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      font-weight: 800;
+      color: white;
+    }
+    
+    .brand-name {
+      font-size: 32px;
+      font-weight: 700;
+      color: #333;
+      letter-spacing: 0.5px;
+    }
+    
+    h1 {
+      color: #333;
+      margin-bottom: 20px;
+      font-size: 28px;
+      font-weight: 600;
+    }
+    
+    #info {
+      background: #f8f9fa;
+      padding: 15px;
+      border-radius: 10px;
+      margin: 25px 0;
+      color: #666;
+      font-size: 16px;
+      min-height: 54px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+    }
+    
+    .details {
+      text-align: left;
+      background: #f8f9fa;
+      padding: 25px;
+      border-radius: 10px;
+      margin-top: 25px;
+    }
+    
+    .details p {
+      margin: 12px 0;
+      color: #555;
+      font-size: 15px;
+    }
+    
+    .details span {
+      font-weight: 600;
+      color: #333;
+    }
+    
+    #price {
+      color: #667eea;
+      font-size: 18px;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.6; }
+    }
+    
+    .loading {
+      animation: pulse 1.5s infinite;
+    }
+  </style>
+  <script>
+    async function detectRegion() {
+      const infoBox = document.getElementById("info");
+      infoBox.textContent = "Detecting your region...";
+      infoBox.classList.add('loading');
+      
+      try {
+        const response = await fetch("https://ipapi.co/json/");
+        const data = await response.json();
+        
+        const country = data.country_code;
+        const currency = data.currency;
+        const ip = data.ip;
+        const timezone = data.timezone;
+        
+        document.getElementById("country").textContent = country;
+        document.getElementById("currency").textContent = currency;
+        document.getElementById("ip").textContent = ip;
+        document.getElementById("timezone").textContent = timezone;
+        
+        let redirectUrl, priceText;
+        if (country === "IN") {
+          redirectUrl = "https://rzp.io/rzp/0kDBIOek";
+          priceText = "₹10 INR";
+        } else {
+          redirectUrl = "https://rzp.io/rzp/A6X2FaRx";
+          priceText = "₹50 INTL";
+        }
+        
+        document.getElementById("price").textContent = priceText;
+        infoBox.classList.remove('loading');
+        infoBox.textContent = "Opening secure payment gateway...";
+        infoBox.style.background = "#e8f5e9";
+        infoBox.style.color = "#2e7d32";
+        
+        setTimeout(() => {
+          window.location.href = redirectUrl;
+        }, 3000);
+        
+      } catch (error) {
+        infoBox.classList.remove('loading');
+        infoBox.textContent = "Error detecting region. Please try again.";
+        infoBox.style.background = "#ffebee";
+        infoBox.style.color = "#c62828";
+        console.error('Detection error:', error);
+      }
+    }
+    
+    document.addEventListener('DOMContentLoaded', detectRegion);
+  </script>
+</head>
+<body>
+  <div class="card">
+    <div class="logo-container">
+      <div class="logo">MT</div>
+      <div class="brand-name">MoneyTalks</div>
+    </div>
+    
+    <h1>Checking Your Region...</h1>
+    <div id="info">Please wait...</div>
+    <div class="details">
+      <p>Country: <span id="country">—</span></p>
+      <p>Currency: <span id="currency">—</span></p>
+      <p>IP: <span id="ip">—</span></p>
+      <p>Timezone: <span id="timezone">—</span></p>
+      <p>Price: <span id="price">—</span></p>
+    </div>
+  </div>
+</body>
+  </html>
