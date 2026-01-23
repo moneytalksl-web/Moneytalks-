@@ -1,144 +1,101 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Payment Successful - MoneyTalks</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Payment Successful - MoneyTalks</title>
 
-<style>
-body {
-  margin:0;
-  padding:0;
-  background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  height:100vh;
-  color:white;
-  font-family: system-ui, sans-serif;
-}
-.container {
-  text-align:center;
-  max-width:400px;
-}
-.logo {
-  font-size:48px;
-  font-weight:700;
-  margin-bottom:10px;
-}
-h1 {
-  font-size:28px;
-  margin-bottom:8px;
-}
-p {
-  font-size:16px;
-  margin:6px 0;
-}
-#access {
-  font-size:22px;
-  font-weight:600;
-  color:#00e676;
-  margin-top:10px;
-}
-button {
-  margin-top:20px;
-  background:#00e676;
-  border:none;
-  padding:12px 18px;
-  font-size:16px;
-  border-radius:10px;
-  cursor:pointer;
-}
-.confetti {
-  position:fixed;
-  top:0; left:0;
-  width:100%; height:100%;
-  pointer-events:none;
-}
-</style>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #6a0dad, #00c853);
+      color: white;
+      text-align: center;
+      padding: 40px;
+      animation: fadeIn 1.2s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .box {
+      background: #ffffff22;
+      padding: 25px;
+      border-radius: 15px;
+      backdrop-filter: blur(10px);
+      display: inline-block;
+      margin-top: 40px;
+      animation: slideUp 1.2s ease-in-out;
+    }
+
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(40px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .btn {
+      background: #ffffff;
+      color: #6a0dad;
+      padding: 12px 25px;
+      border-radius: 8px;
+      font-size: 18px;
+      font-weight: bold;
+      text-decoration: none;
+      display: inline-block;
+      margin-top: 15px;
+    }
+
+    .btn:hover {
+      background: #e1bee7;
+    }
+
+  </style>
 </head>
 
 <body>
 
-<canvas class="confetti" id="confetti"></canvas>
+  <h1>✨ Payment Successful! ✨</h1>
+  <p>Thank you for your payment.</p>
 
-<div class="container">
-  <div class="logo">MT</div>
-  <h1>Payment Successful!</h1>
-  <p>Your Access ID:</p>
-  <div id="access">Generating...</div>
-  <p>Redirecting to Telegram in 3 seconds...</p>
-  <button onclick="goTelegram()">Open Telegram</button>
-</div>
+  <div class="box">
+    <h2>Your Access ID</h2>
+    <h1 id="accessId" style="letter-spacing: 3px;"></h1>
 
-<script>
-// CONFIG
-const TELEGRAM_LINK = "https://t.me/+Hy1jWBHA4bBkNWY1";
-const API_URL = "https://script.google.com/macros/s/AKfycbyFyhQvPx06I_0ujEe3pzOqLGrlArU43LQ8KfcCJwp2BYEW2CI4vxz8EYBhM6Me7b6X/exec";
+    <p style="margin-top:20px;">Saving to database...</p>
+  </div>
 
-// Generate Access ID
-function generateAccessId() {
-  return "MT-" + Math.floor(100000 + Math.random() * 900000);
-}
+  <script>
+    const accessId = "MT-" + Math.floor(100000 + Math.random() * 900000);
+    const country = localStorage.getItem("detected_country") || "Unknown";
+    const amount = localStorage.getItem("paid_amount") || "0";
 
-const accessId = generateAccessId();
-document.getElementById("access").textContent = accessId;
+    document.getElementById("accessId").innerText = accessId;
 
-// Country & Amount (defaults)
-const urlParams = new URLSearchParams(window.location.search);
-const country = urlParams.get("country") || "IN";
-const amount = country === "IN" ? "10" : "50";
+    const data = {
+      accessId,
+      country,
+      amount
+    };
 
-// Save to Google Sheets
-fetch(API_URL, {
-  method: "POST",
-  body: JSON.stringify({
-    accessId: accessId,
-    country: country,
-    amount: amount
-  })
-});
+    // 🔥 YOUR GOOGLE SCRIPT WEB APP URL
+    const WEB_URL = "https://script.google.com/macros/s/AKfycbwG97rZ898K3JRgtvL7oLC3lKlgaho7ziiIyo5THX7nXca_Osler9Bi_xh8RKPE3M8k/exec";
 
-// Telegram functions
-function goTelegram() {
-  window.location.href = TELEGRAM_LINK;
-}
+    fetch(WEB_URL, {
+      method: "POST",
+      mode: "no-cors",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data)
+    });
 
-// Redirect after 3 sec
-setTimeout(goTelegram, 3000);
+    // Redirect after 3 seconds
+    setTimeout(() => {
+      window.location.href = "https://t.me/+Hy1jWBHA4bBk";
+    }, 3000);
+  </script>
 
-// Confetti
-const confetti = document.getElementById("confetti");
-const ctx = confetti.getContext("2d");
-confetti.width = window.innerWidth;
-confetti.height = window.innerHeight;
-let pieces = [];
-
-for (let i=0; i<150; i++) {
-  pieces.push({
-    x: Math.random()*confetti.width,
-    y: Math.random()*confetti.height - confetti.height,
-    w: 8,
-    h: 14,
-    vy: Math.random()*3+2,
-    vx: (Math.random()-0.5)*2,
-    color: `hsl(${Math.random()*360},100%,50%)`
-  });
-}
-
-function update() {
-  ctx.clearRect(0,0,confetti.width,confetti.height);
-  pieces.forEach(p=>{
-    p.y+=p.vy;
-    p.x+=p.vx;
-    if(p.y > confetti.height) p.y = 0 - p.h;
-    ctx.fillStyle = p.color;
-    ctx.fillRect(p.x,p.y,p.w,p.h);
-  });
-  requestAnimationFrame(update);
-}
-update();
-</script>
+  <a class="btn" href="https://t.me/+Hy1jWBHA4bBk">Go to Telegram</a>
 
 </body>
 </html>
