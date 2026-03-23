@@ -10,7 +10,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&display=swap" rel="stylesheet">
   
   <!-- PayPal SDK with YOUR actual client ID -->
-  <script src="https://www.paypal.com/sdk/js?client-id=BAAj87esBWQ_jdj0H4BPuWosmAIPN0Yw49JMVlCUNHaHNNoozye4857tkOoaAbRDaEXvJBYmrdm1tX3crE&currency=USD"></script>
+  <script src="https://www.paypal.com/sdk/js?&currency=USD "></script>
   
   <!-- Razorpay SDK with YOUR actual key -->
   <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
@@ -1010,7 +1010,7 @@
       } else {
         // Razorpay Checkout
         const options = {
-          key: 'rzp_test_SCYXm6xGDvO1hj', // Your Razorpay test key
+          key: 'rzp_', // Your Razorpay test key
           amount: Math.round(plan.price * 100), // Convert to paise
           currency: 'INR',
           name: 'MoneyTalks',
@@ -1076,13 +1076,13 @@
     import { getFirestore, doc, updateDoc, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
     const firebaseConfig = {
-      apiKey: "AIzaSyCgakUnf1xeAy5tU-oQQs84609wnMukNBE",
-      authDomain: "moneytalks-a9329.firebaseapp.com",
-      projectId: "moneytalks-a9329",
-      storageBucket: "moneytalks-a9329.firebasestorage.app",
-      messagingSenderId: "865902355512",
-      appId: "1:865902355512:web:f67bddc159776db34d72cd",
-      measurementId: "G-TLGCP9C4FD"
+      apiKey: "",
+      authDomain: "moneytalks-firebaseapp.com",
+      projectId: "moneytalks-",
+      storageBucket: "moneyt.firebasestorage.app",
+      messagingSenderId: "8655512",
+      appId: "1:865902355512:webcd",
+      measurementId: "G-TL"
     };
 
     const app = initializeApp(firebaseConfig);
