@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Crypto Surge • MoneyTalks | Help Us Build Faster</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', 'Poppins', 'Inter', system-ui, sans-serif;
+      background: radial-gradient(circle at 10% 20%, #0a0f1c, #010208);
+      min-height: 100vh;
+      color: #ffffff;
+      overflow-x: hidden;
+    }
+
+    /* particles / animated background */
+    .crypto-bg {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 0;
+      background-image: radial-gradient(rgba(0,230,118,0.08) 1px, transparent 1px);
+      background-size: 40px 40px;
+    }
+
+    .floating-coin {
+      position: absolute;
+      font-size: 28px;
+      opacity: 0.2;
+      animation: floatCoin linear infinite;
+      pointer-events: none;
+    }
+
+    @keyframes floatCoin {
+      0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+      20% { opacity: 0.3; }
+      80% { opacity: 0.3; }
+      100% { transform: translateY(-20vh) rotate(360deg); opacity: 0; }
+    }
+
+    /* container */
+    .container {
+      position: relative;
+      z-index: 10;
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 24px 24px 50px;
+    }
+
+    /* SEQUENTIAL REVEAL OVERLAY - UPGRADED CRYPTO THEME */
+    .reveal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(ellipse at top, #0a0f24, #010108);
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: opacity 0.9s ease;
+    }
+
+    .reveal-card {
+      text-align: center;
+      max-width: 850px;
+      width: 90%;
+      padding: 50px 35px;
+      background: rgba(5, 10, 30, 0.75);
+      backdrop-filter: blur(18px);
+      border-radius: 80px;
+      border: 1px solid rgba(0,230,118,0.5);
+      box-shadow: 0 0 60px rgba(0,230,118,0.2);
+    }
+
+    .reveal-item {
+      opacity: 0;
+      transform: translateY(-70px);
+      transition: all 0.7s cubic-bezier(0.2, 0.9, 0.4, 1.2);
+    }
+
+    .reveal-item.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .reveal-item.hide {
+      opacity: 0;
+      transform: translateY(-70px);
+      display: none;
+    }
+
+    /* crypto dynamic charts area (inside overlay) */
+    .crypto-chart-preview {
+      background: rgba(0,0,0,0.5);
+      border-radius: 48px;
+      padding: 20px;
+      margin: 25px 0;
+      border: 1px solid #FFD966;
+    }
+
+    .mini-chart {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      height: 100px;
+      gap: 12px;
+      margin: 20px 0;
+    }
+
+    .bar {
+      background: linear-gradient(0deg, #00E676, #8E2DE2);
+      width: 100%;
+      border-radius: 12px 12px 6px 6px;
+      transition: height 0.4s;
+    }
+
+    .access-id-box {
+      font-family: 'Courier New', monospace;
+      font-size: clamp(38px, 9vw, 80px);
+      font-weight: 900;
+      letter-spacing: 5px;
+      background: linear-gradient(135deg, #FFD966, #00E676, #3b82f6, #FFD966);
+      background-size: 300% 300%;
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      margin: 15px 0;
+      animation: gradientFlow 4s ease infinite;
+    }
+
+    @keyframes gradientFlow {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .big-location, .big-datetime {
+      font-size: clamp(22px, 4vw, 36px);
+      font-weight: 600;
+      background: rgba(255,255,240,0.9);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      display: inline-block;
+    }
+
+    .crypto-earning-message {
+      background: linear-gradient(145deg, rgba(0,230,118,0.12), rgba(142,45,226,0.2));
+      border-radius: 56px;
+      padding: 30px 20px;
+      margin: 25px 0;
+      border: 2px solid #FFD966;
+      animation: borderGlow 1.8s infinite alternate;
+    }
+
+    @keyframes borderGlow {
+      0% { border-color: #FFD966; box-shadow: 0 0 15px rgba(255,217,102,0.2); }
+      100% { border-color: #00E676; box-shadow: 0 0 45px rgba(0,230,118,0.6); }
+    }
+
+    .crypto-main-title {
+      font-size: clamp(32px, 7vw, 58px);
+      font-weight: 900;
+      background: linear-gradient(135deg, #FFD966, #00E676, #3b82f6);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .crypto-stats {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 18px;
+      margin: 20px 0;
+    }
+
+    .stat-badge {
+      background: rgba(0,230,118,0.15);
+      padding: 10px 20px;
+      border-radius: 60px;
+      font-weight: 600;
+    }
+
+    .earn-button {
+      background: linear-gradient(95deg, #00E676, #8E2DE2);
+      padding: 14px 32px;
+      border-radius: 60px;
+      font-weight: 800;
+      font-size: 1.3rem;
+      text-decoration: none;
+      color: white;
+      display: inline-block;
+      transition: all 0.2s;
+    }
+
+    /* main content */
+    .main-content {
+      opacity: 0;
+      transition: opacity 1s ease;
+    }
+
+    .main-content.visible {
+      opacity: 1;
+    }
+
+    /* UNDER CONSTRUCTION ALERT - prominent */
+    .construction-alert {
+      background: linear-gradient(135deg, #ff9800, #ff5722);
+      border-radius: 80px;
+      padding: 14px 24px;
+      margin-bottom: 28px;
+      text-align: center;
+      font-weight: bold;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+      box-shadow: 0 0 30px rgba(255,87,34,0.5);
+      border: 2px solid #FFD966;
+    }
+    .construction-alert span {
+      font-size: 1.2rem;
+    }
+    .razorpay-link {
+      background: #fff;
+      color: #ff5722;
+      padding: 8px 28px;
+      border-radius: 60px;
+      text-decoration: none;
+      font-weight: 800;
+      transition: 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .razorpay-link:hover {
+      transform: scale(1.03);
+      background: #FFD966;
+      color: #1a1a2e;
+    }
+
+    /* crypto live tiles */
+    .crypto-live-panel {
+      background: rgba(0, 0, 0, 0.45);
+      backdrop-filter: blur(16px);
+      border-radius: 56px;
+      padding: 22px 20px;
+      margin-bottom: 30px;
+      border: 1px solid rgba(0,230,118,0.4);
+    }
+
+    .coin-ticker {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 18px;
+      margin: 20px 0;
+    }
+
+    .coin-card {
+      background: rgba(20, 15, 45, 0.7);
+      border-radius: 32px;
+      padding: 16px;
+      flex: 1;
+      min-width: 160px;
+      text-align: center;
+      transition: transform 0.2s;
+      border-bottom: 3px solid #FFD966;
+    }
+
+    .coin-name {
+      font-size: 1.5rem;
+      font-weight: 800;
+    }
+
+    .coin-price {
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: #00E676;
+    }
+
+    .change-up {
+      color: #00E676;
+      font-weight: bold;
+    }
+
+    .chart-container {
+      height: 180px;
+      margin: 25px 0 15px;
+      background: rgba(0,0,0,0.3);
+      border-radius: 40px;
+      padding: 12px;
+    }
+
+    canvas {
+      max-height: 150px;
+      width: 100%;
+    }
+
+    .quote-bubble {
+      background: linear-gradient(120deg, #8E2DE2, #2b1e4a);
+      border-radius: 48px;
+      padding: 20px 24px;
+      margin: 20px 0;
+      font-size: 1.2rem;
+      font-weight: 500;
+      border-left: 8px solid #FFD966;
+    }
+
+    .btn-telegram {
+      background: linear-gradient(90deg, #2AABEE, #1e7fb0);
+      padding: 12px 28px;
+      border-radius: 40px;
+      text-decoration: none;
+      color: white;
+      font-weight: bold;
+    }
+
+    .support-box {
+      background: linear-gradient(135deg, rgba(142,45,226,0.2), rgba(0,230,118,0.1));
+      border-radius: 48px;
+      padding: 20px;
+      margin-top: 20px;
+      text-align: center;
+    }
+
+    .footer {
+      text-align: center;
+      margin-top: 60px;
+      font-size: 12px;
+      opacity: 0.6;
+    }
+    .panel { display: none; }
+    .panel.active-panel { display: block; }
+    .slider-track { transition: transform 0.4s ease; display: flex; }
+    .dot { width: 10px; height: 10px; background: gray; border-radius: 50%; cursor: pointer; }
+    .dot.active { background: #00E676; width: 24px; border-radius: 12px; }
+  </style>
+</head>
+<body>
+
+<div class="crypto-bg" id="cryptoBg"></div>
+
+<!-- REVEAL OVERLAY WITH CHARTS AND COINS -->
+<div class="reveal-overlay" id="revealOverlay">
+  <div class="reveal-card">
+    <div id="revealItem1" class="reveal-item">
+      <div style="font-size: 18px; letter-spacing: 3px;">YOUR VIP ACCESS ID</div>
+      <div class="access-id-box" id="revealAccessId">MT-XXXXXX</div>
+      <div style="font-size: 12px;">⚡ used for withdrawals & support</div>
+    </div>
+
+    <div id="revealItem2" class="reveal-item">
+      <div class="big-location" id="revealLocation">📍 Loading crypto hub...</div>
+    </div>
+
+    <div id="revealItem3" class="reveal-item">
+      <div class="big-datetime" id="revealDateTime">📅 loading time</div>
+    </div>
+
+    <div id="revealItem4" class="reveal-item">
+      <div class="crypto-chart-preview">
+        <div style="font-weight: bold; margin-bottom: 8px;">📈 BITCOIN BREAKOUT 🚀</div>
+        <div class="mini-chart" id="miniChartBars"></div>
+        <div style="font-size: 14px;">+23% this week | $68,420 → $84,200</div>
+      </div>
+    </div>
+
+    <div id="revealItem5" class="reveal-item">
+      <div class="crypto-earning-message">
+        <div class="crypto-main-title">🔥 BULL RUN IS HERE 🔥</div>
+        <div style="font-size: 1.6rem; margin: 12px 0;">💰 EARN REAL CRYPTO — NO INVESTMENT 💰</div>
+        <div class="crypto-stats">
+          <div class="stat-badge"><span>📊 +342%</span><br>ETH APR avg</div>
+          <div class="stat-badge"><span>🏆 $1.2B</span><br>Daily volume</div>
+          <div class="stat-badge"><span>🚀 150+</span><br>Free earning links</div>
+        </div>
+        <a href="#" id="cryptoStartBtn" class="earn-button">⚡ START EARNING NOW ⚡</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN CONTENT WITH LIVE CHARTS AND CRYPTO STORY -->
+<div class="main-content" id="mainContent">
+  <div class="container">
+    <!-- UNDER CONSTRUCTION + RAZORPAY SUPPORT BANNER (prominent) -->
+    <div class="construction-alert">
+      <span>🏗️ <strong>WEBSITE UNDER CONSTRUCTION</strong> 🏗️</span>
+      <span>⚡ Help us launch faster! ⚡</span>
+      <a href="https://razorpay.me/@moneytalks4008" target="_blank" class="razorpay-link">
+        💖 SUPPORT ON RAZORPAY 💖
+      </a>
+    </div>
+
+    <!-- SUCCESS HEADER -->
+    <div style="background: rgba(0,0,0,0.5); backdrop-filter: blur(16px); border-radius: 60px; padding: 30px 20px; text-align: center; margin-bottom: 30px;">
+      <div style="font-size: 70px;">📈✨</div>
+      <div style="font-size: clamp(32px, 7vw, 58px); font-weight: 900; background: linear-gradient(135deg, #FFD966, #00E676); -webkit-background-clip: text; background-clip: text; color: transparent;">WELCOME TO THE CRYPTO REVOLUTION</div>
+      <div style="font-size: 2rem; font-weight: bold;" id="bigUserName">Crypto Trader</div>
+      <div class="info-row" style="display: flex; gap: 20px; justify-content: center; margin-top: 15px;">
+        <span>🆔 <span id="mainAccessId">MT-XXXX</span></span>
+        <span>📍 <span id="mainCityDisplay">World</span></span>
+      </div>
+      <div style="margin-top: 20px; display: flex; flex-wrap: wrap; gap: 15px; justify-content: center;">
+        <a href="https://t.me/+Hy1jWBHA4bBk" target="_blank" class="btn-telegram">📱 JOIN TELEGRAM → FREE CRYPTO LINKS</a>
+        <a href="https://razorpay.me/@moneytalks4008" target="_blank" style="background: #FFD966; color:#1a1a2e; padding:12px 28px; border-radius:40px; text-decoration:none; font-weight:800;">💎 DONATE TO SPEED UP DEV</a>
+      </div>
+      <div class="support-box" style="margin-top: 20px; background:rgba(0,0,0,0.5);">
+        ⚠️ Full platform features (dashboard, automated withdrawals, premium tools) are under active development. Your support via RazorPay helps us launch quicker!
+      </div>
+    </div>
+
+    <!-- LIVE CRYPTO PRICES & CHART SECTION (ANIMATED) -->
+    <div class="crypto-live-panel">
+      <div style="font-size: 28px; font-weight: 800; text-align: center;">💎 CRYPTO ON THE RISE 💎</div>
+      <div class="coin-ticker" id="coinTicker"></div>
+      <div class="chart-container">
+        <canvas id="priceChart" width="600" height="130" style="width:100%; height:130px;"></canvas>
+      </div>
+      <div class="quote-bubble">
+        “The global crypto market cap just surpassed $2.8 Trillion. Early adopters are seeing life-changing gains — and you can earn crypto without spending a dollar.”
+      </div>
+    </div>
+
+    <!-- WHY CRYPTO & EARNING MESSAGES -->
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px,1fr)); gap: 24px; margin: 30px 0;">
+      <div style="background: rgba(0,0,0,0.4); border-radius: 48px; padding: 24px;">
+        <div style="font-size: 48px;">📈</div>
+        <h3 style="font-size: 28px;">Bitcoin Halving Effect</h3>
+        <p>Historically, BTC soars after halving. Next stop: $100k? Don't miss the wave — earn free satoshis now.</p>
+      </div>
+      <div style="background: rgba(0,0,0,0.4); border-radius: 48px; padding: 24px;">
+        <div style="font-size: 48px;">🤑</div>
+        <h3 style="font-size: 28px;">Earn Without Buying</h3>
+        <p>Faucets, PTC, airdrops — thousands earn $50–$500/month using our verified links. Start today, zero risk.</p>
+      </div>
+      <div style="background: rgba(0,0,0,0.4); border-radius: 48px; padding: 24px;">
+        <div style="font-size: 48px;">🚀</div>
+        <h3 style="font-size: 28px;">The Future is Decentralized</h3>
+        <p>CBDCs, DeFi, NFTs — crypto isn't a trend, it's a financial evolution. Secure your bag with free earnings.</p>
+      </div>
+    </div>
+
+    <!-- MONEYTALKS SLIDER (INSPIRATION) -->
+    <div class="moneytalks-slider" style="background: rgba(0,0,0,0.6); border-radius: 60px; padding: 40px 20px; text-align: center; margin: 35px 0;">
+      <div class="slider-track" id="sliderTrack" style="display: flex; overflow: hidden;">
+        <div style="min-width: 100%;">💰 <strong>Crypto earning simplified</strong> — we provide 60+ legit platforms.</div>
+        <div style="min-width: 100%;">📊 <strong>Daily rewards</strong> — spin wheel, win crypto links, increase balance.</div>
+        <div style="min-width: 100%;">🌍 <strong>Global community</strong> — 5k+ active members, $50k+ paid.</div>
+        <div style="min-width: 100%;">⚡ <strong>Premium plans boost earnings up to 2.5x</strong> — from $1.50.</div>
+      </div>
+      <div class="slider-dots" style="display: flex; justify-content: center; gap: 12px; margin-top: 25px;"></div>
+    </div>
+
+    <!-- TABS -->
+    <div class="nav-tabs" style="display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; margin: 20px 0;">
+      <button class="tab-btn active" data-tab="home">🏠 Home</button>
+      <button class="tab-btn" data-tab="earn">💰 Earn Crypto</button>
+      <button class="tab-btn" data-tab="plans">💎 Premium Plans</button>
+      <button class="tab-btn" data-tab="game">🎲 Lucky Spin</button>
+    </div>
+
+    <div id="homePanel" class="panel active-panel">
+      <div style="background: rgba(0,0,0,0.5); border-radius: 48px; padding: 28px;">
+        <h2>🚀 Start Your Earning Journey</h2>
+        <p style="margin: 15px 0;">Cryptocurrency is reshaping global finance. At MoneyTalks, we give you hand-picked faucets, PTC sites, mining platforms, and exclusive premium links. No investment required — just your time and will to earn.</p>
+        <div class="support-box">
+          <h3>✨ How to earn today? ✨</h3>
+          <p>1️⃣ Join our Telegram<br>2️⃣ Access daily earning list<br>3️⃣ Claim faucets & complete offers<br>4️⃣ Withdraw crypto to your wallet</p>
+          <div style="margin-top: 20px;">
+            <a href="https://razorpay.me/@moneytalks4008" target="_blank" style="background: #FFD966; color: #0a0f1c; padding: 10px 28px; border-radius: 60px; text-decoration: none; font-weight: 800;">💖 Support Development on RazorPay</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="earnPanel" class="panel">
+      <div style="background: rgba(0,0,0,0.5); border-radius: 48px; padding: 28px;">
+        <h2>💰 Free Crypto Earning Methods</h2>
+        <ul style="margin-top: 20px; line-height: 2;">
+          <li>⭐ <strong>Faucets</strong> — claim BTC, ETH, DOGE every hour</li>
+          <li>⭐ <strong>PTC (Paid-to-Click)</strong> — earn by viewing ads</li>
+          <li>⭐ <strong>Shortlinks</strong> — get paid per click</li>
+          <li>⭐ <strong>Offerwalls & Surveys</strong> — complete tasks for crypto</li>
+          <li>⭐ <strong>Premium Multipliers</strong> — upgrade plan to earn 2.5x faster</li>
+        </ul>
+        <div class="crypto-stats" style="justify-content: flex-start; margin-top: 25px;">
+          <div class="stat-badge">✅ 60+ verified sites</div>
+          <div class="stat-badge">✅ Instant withdrawal options</div>
+          <div class="stat-badge">✅ 24/7 support</div>
+        </div>
+      </div>
+    </div>
+
+    <div id="plansPanel" class="panel">
+      <div style="background: rgba(0,0,0,0.5); border-radius: 48px; padding: 28px;">
+        <h2>💎 Membership Plans (Lifetime)</h2>
+        <div class="feature-grid" style="display: grid; grid-template-columns: repeat(auto-fit,minmax(150px,1fr)); gap: 20px; margin-top: 20px;">
+          <div><strong>Basic</strong><br>$1.50<br>1 site / 1x</div>
+          <div><strong>Starter</strong><br>$2.90<br>2 sites / 1.2x</div>
+          <div><strong>Standard</strong><br>$8.20<br>6 sites / 1.5x</div>
+          <div><strong>Advanced</strong><br>$14.00<br>12 sites / 2x</div>
+          <div><strong>Premium</strong><br>$25.00<br>Unlimited / 2.5x</div>
+        </div>
+        <p style="margin-top: 20px;">🚀 Higher plans = more high value earning links + multiplier bonus on all faucets!</p>
+        <div class="construction-alert" style="margin-top: 30px; background:#ff9800aa;">
+          ⏳ Payment gateway integration coming soon. Meanwhile support us on RazorPay to accelerate development.
+          <a href="https://razorpay.me/@moneytalks4008" target="_blank" class="razorpay-link" style="background:#000; color:#ff9800;">Donate Now</a>
+        </div>
+      </div>
+    </div>
+
+    <div id="gamePanel" class="panel">
+      <div style="background: rgba(0,0,0,0.5); border-radius: 48px; padding: 28px; text-align: center;">
+        <div style="font-size: 64px;">🎡</div>
+        <h2>Lucky Crypto Spin</h2>
+        <button id="demoSpinBtn" style="background: #8E2DE2; border: none; padding: 12px 35px; border-radius: 40px; color: white; font-weight: bold; margin: 20px 0; cursor: pointer;">🎲 SPIN TO WIN 🎲</button>
+        <div id="spinResult" style="font-size: 22px; font-weight: bold; color: #FFD966;"></div>
+        <p class="construction-alert" style="margin-top: 20px; background:#333; justify-content:center;">✨ Full game rewards + real crypto prizes after launch ✨</p>
+      </div>
+    </div>
+
+    <div class="footer">
+      © 2026 MoneyTalks — Next Gen Crypto Hub. themoneytalks.web@gmail.com | Telegram: @MONEYTALKS_OFFICIAL
+    </div>
+  </div>
+</div>
+
+<script>
+  (function(){
+    // RAZORPAY LINK is already present multiple times, no extra code needed but we ensure it's functional
+    const GOOGLE_SHEETS_URL = "https://script.google.com/macros/s/AKfycbyexpwR3YtG6mGGs3wYKbAOjbJJjpWruWCYtizB-XAe8-QY3gUSBJy0yvRwRMmVhPxb/exec";
+    async function saveToSheets(accessId, city, country, amount) {
+      try {
+        await fetch(GOOGLE_SHEETS_URL, { method: "POST", mode: "no-cors", headers:{"Content-Type":"application/json"}, body: JSON.stringify({ accessId, used:"no", country, city, amount }) });
+        console.log("✅ saved");
+      } catch(e){}
+    }
+
+    // location
+    let detectedCity = "Crypto Valley", detectedCountry = "Global", flag = "🌍";
+    async function detectLocation() {
+      try {
+        const res = await fetch('https://ipapi.co/json/');
+        const data = await res.json();
+        detectedCity = data.city || data.region || "Crypto Hub";
+        detectedCountry = data.country_name || "International";
+        flag = data.country_code ? String.fromCodePoint(...data.country_code.toUpperCase().split('').map(c=>127397 + c.charCodeAt())) : "🌍";
+      } catch(e) {}
+      document.getElementById("revealLocation").innerHTML = `📍 ${flag} ${detectedCity}, ${detectedCountry}`;
+      document.getElementById("mainCityDisplay").innerHTML = `${flag} ${detectedCity}`;
+      return { city: detectedCity, country: detectedCountry };
+    }
+
+    // access id & user
+    const accessId = `MT-${Date.now().toString(36).slice(-4)}${Math.random().toString(36).substring(2,6).toUpperCase()}`;
+    let userName = localStorage.getItem("mt_username") || ("Crypto" + Math.floor(Math.random()*999));
+    localStorage.setItem("mt_username", userName);
+    document.getElementById("revealAccessId").innerText = accessId;
+    document.getElementById("mainAccessId").innerHTML = accessId;
+    document.getElementById("bigUserName").innerText = userName;
+    const now = new Date();
+    document.getElementById("revealDateTime").innerHTML = `📅 ${now.toLocaleDateString()} · ${now.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})}`;
+
+    // MINI CHART BARS (reveal animation)
+    function renderMiniBars() {
+      const container = document.getElementById("miniChartBars");
+      if(!container) return;
+      container.innerHTML = "";
+      const heights = [35, 52, 48, 70, 88, 94, 78, 65];
+      for(let h of heights){
+        const bar = document.createElement("div");
+        bar.className = "bar";
+        bar.style.height = h + "px";
+        bar.style.width = "30px";
+        container.appendChild(bar);
+      }
+    }
+    renderMiniBars();
+
+    // LIVE COIN DATA & CHART (simulated trending up)
+    const coins = [
+      { name: "BTC", price: 84250, change: 5.2 },
+      { name: "ETH", price: 3260, change: 8.7 },
+      { name: "SOL", price: 168.4, change: 12.3 },
+      { name: "DOGE", price: 0.158, change: 9.1 }
+    ];
+    function updateCoinTicker() {
+      const tickerDiv = document.getElementById("coinTicker");
+      if(!tickerDiv) return;
+      tickerDiv.innerHTML = coins.map(c => `
+        <div class="coin-card">
+          <div class="coin-name">${c.name}</div>
+          <div class="coin-price">$${c.price.toLocaleString()}</div>
+          <div class="change-up">▲ ${c.change}%</div>
+        </div>
+      `).join('');
+    }
+    updateCoinTicker();
+
+    const canvas = document.getElementById("priceChart");
+    let chartDataPoints = [42, 45, 48, 52, 58, 65, 72, 78, 84, 89, 94, 97, 102];
+    function drawChart() {
+      if(!canvas) return;
+      const ctx = canvas.getContext("2d");
+      if(!ctx) return;
+      const w = canvas.clientWidth, h = 130;
+      canvas.width = w;
+      canvas.height = h;
+      ctx.clearRect(0,0,w,h);
+      ctx.beginPath();
+      ctx.strokeStyle = "#00E676";
+      ctx.lineWidth = 3;
+      const step = w / (chartDataPoints.length-1);
+      let x = 0;
+      for(let i=0; i<chartDataPoints.length; i++){
+        let y = h - (chartDataPoints[i] / 120) * h;
+        if(i===0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+        x += step;
+      }
+      ctx.stroke();
+      ctx.fillStyle = "#8E2DE2";
+      for(let i=0; i<chartDataPoints.length; i++){
+        let xpos = i*step;
+        let ypos = h - (chartDataPoints[i]/120)*h;
+        ctx.beginPath();
+        ctx.arc(xpos, ypos, 4, 0, 2*Math.PI);
+        ctx.fill();
+        ctx.fillStyle = "#FFD966";
+        ctx.fill();
+        ctx.fillStyle = "#8E2DE2";
+      }
+    }
+    drawChart();
+    window.addEventListener("resize", ()=> drawChart());
+    setInterval(() => {
+      chartDataPoints.push(chartDataPoints[chartDataPoints.length-1] + (Math.random() * 2 + 0.5));
+      if(chartDataPoints.length > 20) chartDataPoints.shift();
+      drawChart();
+      coins.forEach(c => {
+        let increase = (Math.random() * 2 + 0.3);
+        c.price = +(c.price * (1 + increase/100)).toFixed(2);
+        c.change = +(c.change + (Math.random() * 1.2)).toFixed(1);
+      });
+      updateCoinTicker();
+    }, 5800);
+
+    // floating coins background
+    function createFloatingCoins() {
+      const bgDiv = document.querySelector(".crypto-bg");
+      for(let i=0;i<35;i++) {
+        const coin = document.createElement("div");
+        coin.className = "floating-coin";
+        coin.innerHTML = ["₿","Ξ","◎","Ð","🪙","💎"][Math.floor(Math.random()*6)];
+        coin.style.left = Math.random() * 100 + "%";
+        coin.style.fontSize = 18 + Math.random() * 30 + "px";
+        coin.style.animationDuration = 12 + Math.random() * 20 + "s";
+        coin.style.animationDelay = Math.random() * 15 + "s";
+        bgDiv.appendChild(coin);
+      }
+    }
+    createFloatingCoins();
+
+    // SEQUENTIAL REVEAL
+    const items = [
+      { id:"revealItem1", delay:400, duration:2500 },
+      { id:"revealItem2", delay:2900, duration:2000 },
+      { id:"revealItem3", delay:4900, duration:2000 },
+      { id:"revealItem4", delay:6900, duration:2500 },
+      { id:"revealItem5", delay:9400, duration:4500 }
+    ];
+    function startReveal(){
+      let idx = 0;
+      function showNext(){
+        if(idx >= items.length){
+          setTimeout(()=>{
+            const overlay = document.getElementById("revealOverlay");
+            overlay.style.opacity = "0";
+            setTimeout(()=>{
+              overlay.style.display = "none";
+              document.getElementById("mainContent").classList.add("visible");
+              startSlider();
+            }, 800);
+          }, 1800);
+          return;
+        }
+        const el = document.getElementById(items[idx].id);
+        el.classList.add("show");
+        if(idx>0) document.getElementById(items[idx-1].id).classList.add("hide");
+        setTimeout(()=>{ idx++; showNext(); }, items[idx].duration);
+      }
+      setTimeout(()=> showNext(), 500);
+    }
+
+    function startSlider(){
+      const track = document.getElementById("sliderTrack");
+      const slides = track.children;
+      const dotsDiv = document.querySelector(".slider-dots");
+      if(!dotsDiv) return;
+      for(let i=0;i<slides.length;i++){
+        let dot = document.createElement("div");
+        dot.className = "dot";
+        if(i===0) dot.classList.add("active");
+        dot.addEventListener("click",()=> goToSlide(i));
+        dotsDiv.appendChild(dot);
+      }
+      function goToSlide(i){
+        slideIndex = i;
+        track.style.transform = `translateX(-${slideIndex*100}%)`;
+        document.querySelectorAll(".dot").forEach((d,idx)=> idx===slideIndex ? d.classList.add("active"): d.classList.remove("active"));
+      }
+      window.goToSlide = goToSlide;
+      slideIntervalId = setInterval(()=> goToSlide((slideIndex+1)%slides.length), 4500);
+      const sliderParent = document.getElementById("moneytalksSlider");
+      if(sliderParent){
+        sliderParent.addEventListener("mouseenter",()=> clearInterval(slideIntervalId));
+        sliderParent.addEventListener("mouseleave",()=> slideIntervalId = setInterval(()=> goToSlide((slideIndex+1)%slides.length),4500));
+      }
+    }
+    let slideIndex=0, slideIntervalId;
+
+    // TABS
+    const panelsMap = { home:"homePanel", earn:"earnPanel", plans:"plansPanel", game:"gamePanel" };
+    document.querySelectorAll(".tab-btn").forEach(btn => {
+      btn.addEventListener("click",()=>{
+        const tab = btn.dataset.tab;
+        Object.values(panelsMap).forEach(pid => { const p = document.getElementById(pid); if(p) p.classList.remove("active-panel"); });
+        const activePanel = document.getElementById(panelsMap[tab]);
+        if(activePanel) activePanel.classList.add("active-panel");
+        document.querySelectorAll(".tab-btn").forEach(b=>b.classList.remove("active"));
+        btn.classList.add("active");
+      });
+    });
+    document.getElementById("earnPanel")?.classList.remove("active-panel");
+    document.getElementById("plansPanel")?.classList.remove("active-panel");
+    document.getElementById("gamePanel")?.classList.remove("active-panel");
+    document.getElementById("homePanel")?.classList.add("active-panel");
+
+    document.getElementById("cryptoStartBtn")?.addEventListener("click", (e)=>{
+      e.preventDefault();
+      document.querySelector(".tab-btn[data-tab='earn']").click();
+    });
+    document.getElementById("demoSpinBtn")?.addEventListener("click",()=>{
+      const rewards = ["+0.0005 BTC", "Free Premium Link", "50 Doge Bonus", "Ethereum Faucet", "2x Multiplier 1h", "$1 Cash Voucher"];
+      const res = rewards[Math.floor(Math.random()*rewards.length)];
+      document.getElementById("spinResult").innerHTML = `🎡 YOU WON: ${res} 🎡`;
+    });
+
+    (async ()=>{
+      const loc = await detectLocation();
+      await saveToSheets(accessId, loc.city, loc.country, "25.00");
+      localStorage.setItem("mt_access_id", accessId);
+      startReveal();
+    })();
+  })();
+</script>
+</body>
+</html>
